@@ -46,6 +46,8 @@ summary::-webkit-details-marker {
   --tensionleger: rgb(255, 202, 100);
   --tensiontresleger: rgba(255, 202, 100, 0.3);
   --vertleger: rgb(226, 248, 224);
+  --rouge: rgb(213, 76, 117);
+  --jaune: rgb(251, 184, 84);
   font-family: Roboto, sans-serif;
   font-weight: 400;
 }

@@ -35,8 +35,8 @@ declare module '$env/static/private' {
 	export const NVM_RC_VERSION: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
-	export const _P9K_TTY: string;
 	export const NVM_CD_FLAGS: string;
+	export const _P9K_TTY: string;
 	export const TERM: string;
 	export const SHELL: string;
 	export const HOMEBREW_REPOSITORY: string;
@@ -139,8 +139,8 @@ declare module '$env/dynamic/private' {
 		NVM_RC_VERSION: string;
 		NODE: string;
 		INIT_CWD: string;
-		_P9K_TTY: string;
 		NVM_CD_FLAGS: string;
+		_P9K_TTY: string;
 		TERM: string;
 		SHELL: string;
 		HOMEBREW_REPOSITORY: string;

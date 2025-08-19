@@ -15,7 +15,7 @@ export async function load() {
       dateReport: max_report_date,
       atcClasses: [...new Set(atcClasses.map(atc => atc.atc_code))].map(code => ({
         code: code?.charAt(0) || '',
-        name: atcClasses.find(atc => atc.atc_code === code)?.atc_description?.substring(4) || ''
+        name: atcClasses.find(atc => atc.atc_code === code)?.atc_description || ''
       })).filter(atc => atc.code)
     };
   } catch (error) {

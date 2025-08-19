@@ -247,6 +247,11 @@
     background: white;
   }
   
+  select {
+    min-width: 300px;
+    width: 100%;
+  }
+  
   input[type="text"]:focus,
   select:focus {
     outline: none;
