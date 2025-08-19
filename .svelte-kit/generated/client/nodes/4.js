@@ -1,0 +1,1 @@
+export { default as component } from "../../../../src/routes/substitutions/[cis_code]/+page.svelte";

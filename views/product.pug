@@ -1,0 +1,50 @@
+extends layout
+
+block stylesheets
+  link(rel="stylesheet", href="/stylesheets/product.css")
+
+block scripts
+  script(type='module', src='/js/draw_product_page.js')
+
+block content
+  .retour-container
+    a.productpg-back-link(href="/")
+      i(class="fa-solid fa-arrow-left")
+      |  Retour à l'accueil
+  .main-container
+    #title-container.flex-container
+      .header-title
+        #breadcrumb
+        h1
+          .pill-icon 💊
+          #productpg-report-title
+        .productpg-status-row
+          span.productpg-status-icon
+            i(class="fa-solid fa-square-xmark rupture-icon")
+          span.productpg-status-label Statut actuel :
+
+    .flex-container
+      .productpg-inner-wrapper
+        .cis-list#cis-list
+        #productpg-stats
+    
+    .productpg-sales-card#productpg-sales-card
+    .productpg-timeline-card
+      h2.card-title Historique des incidents
+      #productpg-timeline-container
+    
+    //- h2.section-title Alternatives thérapeutiques
+    //- #alternatives-navigation-container.ema-incident-card
+    //-   form#alternatives-form
+    //-     label(for="cis-selector") Choisir un code CIS pour voir les alternatives :
+    //-     select#cis-selector(name="cis")
+    //-     button(type="submit") Voir les alternatives
+
+    .ema-incident-card
+      h2.card-title Incidents au niveau européen (EMA) liés
+      #ema-incidents
+
+block head
+  script.
+    window.productId = !{JSON.stringify(productId)};
+    window.globalReportDate = !{JSON.stringify(globalReportDate)};

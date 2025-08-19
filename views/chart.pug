@@ -1,0 +1,68 @@
+extends layout
+
+block scripts
+  script(type="module",src="/js/draw.js")
+
+block content
+  .main-container
+    #title-container.flex-container
+      .header-title
+        h1
+          .pill-icon 💊
+          #report-title INCIDENTS DE DISPONIBILITÉ des médicaments et vaccins
+        h2#mise-a-jour
+
+    .flex-container
+      #mainfilter-container
+        h2.card-title Filtres
+        .filter-group
+          input(type="text" id="mainfilter-search-box" placeholder="Recherche produit, molécule...")
+        .filter-group
+          select.mainfilter-selector#atc(name="atc")
+            option(value="" selected=selectedAtcClass === "") Choisir une classe ATC
+            each atcClass in ATCClasses
+              option(value=atcClass.code, selected=atcClass.code === selectedAtcClass)= `${atcClass.code} - ${atcClass.description}`
+        .filter-group
+          select.mainfilter-selector#molecule(name="molecule")
+            option(value="") Choisir une molécule
+            each molecule in molecules
+              option(value=molecule.code)=`${molecule.name}`
+        .filter-group
+            input(type="checkbox" id="vaccines-filter")
+            label(for="vaccines-filter" class="card-subtitle") Vaccins uniquement (ATC J07)
+        .filter-group
+            .mainfilter-button-row(role="radiogroup" aria-label="Select time period")
+              input(type="radio" id="period-12" name="period" value="12" class="mainfilter-radio" checked)
+              label(for="period-12" class="mainfilter-button") 12 mois
+
+              input(type="radio" id="period-24" name="period" value="24" class="mainfilter-radio")
+              label(for="period-24" class="mainfilter-button") 24 mois
+
+              input(type="radio" id="period-all" name="period" value="all" class="mainfilter-radio")
+              label(for="period-all" class="mainfilter-button") Tout
+        button#mainfilter-reset Réinitialiser
+        .filter-group
+            #legend-container
+              #floating-legend
+                p#title-legend Légende
+                .legend-item
+                  span.legend-color-box.legend-rupture
+                  | Rupture
+                .legend-item
+                  span.legend-color-box.legend-tension
+                  | Tension
+                .legend-item
+                  span.legend-color-box.legend-arret
+                  | Arrêt de commercialisation
+                .legend-item
+                  span.legend-color-box.legend-disponible
+                  | Disponible
+      #summary
+    #maintbl-dash
+      #tooltip
+
+  #source-info
+    #info-container
+      h2 Avertissement
+      p Les données présentées sur ce site proviennent de sources gouvernementales publiques. Bien que nous nous efforcions de garantir l'exactitude et la fiabilité des informations affichées, ce site ne saurait être tenu responsable des erreurs, omissions ou interprétations des données. Ce site est une représentation visuelle des données et ne constitue pas une source officielle ou faisant autorité. Pour des informations certifiées, veuillez consulter directement les sources gouvernementales référencées sur #[a(href='https://ansm.sante.fr/disponibilites-des-produits-de-sante/medicaments') Disponibilité des produits de santé].
+      p En utilisant ce site, vous acceptez ces conditions.
