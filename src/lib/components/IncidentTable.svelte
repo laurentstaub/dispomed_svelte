@@ -1,5 +1,5 @@
 <script>
-  export let incidents = [];
+  let { incidents = [] } = $props();
   
   function getStatusColor(status) {
     switch(status) {

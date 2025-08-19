@@ -2,10 +2,10 @@
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
   
-  export let incidents = [];
+  let { incidents = [] } = $props();
   
-  let chartContainer;
-  let monthlyData = [];
+  let chartContainer = $state();
+  let monthlyData = $state([]);
   
   // French locale for D3
   const frFr = d3.timeFormatLocale({
@@ -90,13 +90,15 @@
     .range([18, 12])
     .clamp(true);
   
-  // React to incidents changes
-  $: if (incidents && incidents.length > 0) {
-    monthlyData = processMonthlyData(incidents);
-    if (chartContainer) {
-      drawChart();
+  // React to incidents changes using $effect
+  $effect(() => {
+    if (incidents && incidents.length > 0) {
+      monthlyData = processMonthlyData(incidents);
+      if (chartContainer) {
+        drawChart();
+      }
     }
-  }
+  });
   
   onMount(() => {
     if (incidents && incidents.length > 0) {
@@ -410,27 +412,14 @@
   }
 </script>
 
-<div class="summary-chart">
-  <h3>Évolution des ruptures et tensions</h3>
-  <div bind:this={chartContainer} class="chart-container"></div>
+<div class="card-header">
+  <h2 class="card-title">Évolution des ruptures et tensions</h2>
+  <p class="card-subtitle">En nombre de spécialités (Codes CIS) manquantes le 1er de chaque période</p>
 </div>
 
+<div bind:this={chartContainer} class="chart-container"></div>
+
 <style>
-  .summary-chart {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
-  h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--grisfonce);
-  }
-  
   .chart-container {
     width: 100%;
     min-height: 300px;
