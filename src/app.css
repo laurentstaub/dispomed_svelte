@@ -1,11 +1,16 @@
 /* Global styles - will migrate from common.css */
 :root {
   /* Colors from the original design */
-  --rouge: #d62728;
-  --jaune: #ff7f0e;
-  --gris: #7f7f7f;
-  --grisfonce: #4d4d4d;
-  --arret-bg: #969696;
+  --rouge: rgb(213, 76, 117);
+  --jaune: rgb(251, 184, 84);
+  --rupture: rgb(213, 76, 117);
+  --rupturefonce: rgb(145, 30, 64);
+  --tension: rgb(251, 184, 84);
+  --tensionfonce: rgb(224, 130, 0);
+  --gris: rgb(110, 110, 110);
+  --grisfonce: rgb(90, 90, 90);
+  --blanc: rgb(255, 255, 255);
+  --arret-bg: rgba(150, 150, 150, 0.9);
   
   /* Layout */
   --max-width: 1200px;

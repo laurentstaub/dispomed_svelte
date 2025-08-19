@@ -42,8 +42,11 @@
     
     // Count incidents by month
     incidents.forEach(incident => {
-      const startDate = new Date(incident.start_date);
+      // Parse dates - they come as strings from the database
+      const startDate = incident.start_date ? new Date(incident.start_date) : null;
       const endDate = incident.calculated_end_date ? new Date(incident.calculated_end_date) : now;
+      
+      if (!startDate) return; // Skip if no start date
       
       // For each month, check if incident was active
       for (const [key, monthData] of monthlyMap) {
@@ -169,13 +172,11 @@
     // Create line generators
     const lineTension = d3.line()
       .x(d => xScale(d.date))
-      .y(d => yScale(d.tension))
-      .defined(d => d.tension > 0);
+      .y(d => yScale(d.tension));
 
     const lineRupture = d3.line()
       .x(d => xScale(d.date))
-      .y(d => yScale(d.rupture))
-      .defined(d => d.rupture > 0);
+      .y(d => yScale(d.rupture));
 
     // Create SVG
     const svg = d3.select(chartContainer)
@@ -205,84 +206,84 @@
     g.selectAll('.sumchart-x-axis text')
       .style('font-size', `${labelFontSizeScale(windowWidth)}px`);
 
-    // Draw lines
+    // Draw lines - use all monthly data, not just filtered data
     g.append('path')
-      .datum(filteredData)
+      .datum(monthlyData)
       .attr('class', 'sumchart-tension-line')
-      .attr('d', lineTension);
+      .attr('d', lineTension)
+      .style('fill', 'none')
+      .style('stroke', 'var(--tension)')
+      .style('stroke-width', '2px');
 
     g.append('path')
-      .datum(filteredData)
+      .datum(monthlyData)
       .attr('class', 'sumchart-rupture-line')
-      .attr('d', lineRupture);
+      .attr('d', lineRupture)
+      .style('fill', 'none')
+      .style('stroke', 'var(--rupture)')
+      .style('stroke-width', '2px');
 
     // Add marks (circles) for rupture data points
-    g.selectAll('.sumchart-rupture-mark')
+    const ruptureCircles = g.selectAll('.sumchart-rupture-mark')
       .data(filteredData.filter(d => d.rupture > 0 && shouldShowMarkForMonth(d.date, 12)))
       .enter()
       .append('circle')
       .attr('class', 'sumchart-rupture-mark')
       .attr('cx', d => xScale(d.date))
       .attr('cy', d => yScale(d.rupture))
-      .attr('r', 0)
+      .attr('r', 5)
       .style('fill', 'white')
-      .style('stroke', '#ef4444')
+      .style('stroke', 'var(--rupture)')
       .style('stroke-width', 2)
-      .style('filter', 'drop-shadow(0 4px 8px rgba(239, 68, 68, 0.2))')
-      .style('cursor', 'pointer')
+      .style('cursor', 'pointer');
+
+    // Add hover effects for rupture circles
+    ruptureCircles
       .on('mouseover', function(event, d) {
         d3.select(this)
           .transition()
-          .duration(100)
+          .duration(150)
           .attr('r', 8)
-          .style('stroke-width', 4);
+          .style('stroke-width', 3);
       })
       .on('mouseout', function(event, d) {
         d3.select(this)
           .transition()
-          .duration(100)
-          .attr('r', 6)
-          .style('stroke-width', 3);
-      })
-      .transition()
-      .delay((d, i) => i * 50)
-      .duration(600)
-      .ease(d3.easeBounceOut)
-      .attr('r', 6);
+          .duration(150)
+          .attr('r', 5)
+          .style('stroke-width', 2);
+      });
 
     // Add marks (circles) for tension data points
-    g.selectAll('.sumchart-tension-mark')
+    const tensionCircles = g.selectAll('.sumchart-tension-mark')
       .data(filteredData.filter(d => d.tension > 0 && shouldShowMarkForMonth(d.date, 12)))
       .enter()
       .append('circle')
       .attr('class', 'sumchart-tension-mark')
       .attr('cx', d => xScale(d.date))
       .attr('cy', d => yScale(d.tension))
-      .attr('r', 0)
+      .attr('r', 5)
       .style('fill', 'white')
-      .style('stroke', '#f59e0b')
+      .style('stroke', 'var(--tension)')
       .style('stroke-width', 2)
-      .style('filter', 'drop-shadow(0 4px 8px rgba(245, 158, 11, 0.2))')
-      .style('cursor', 'pointer')
+      .style('cursor', 'pointer');
+
+    // Add hover effects for tension circles
+    tensionCircles
       .on('mouseover', function(event, d) {
         d3.select(this)
           .transition()
-          .duration(200)
+          .duration(150)
           .attr('r', 8)
-          .style('stroke-width', 4);
+          .style('stroke-width', 3);
       })
       .on('mouseout', function(event, d) {
         d3.select(this)
           .transition()
-          .duration(200)
-          .attr('r', 6)
-          .style('stroke-width', 3);
-      })
-      .transition()
-      .delay((d, i) => i * 50)
-      .duration(600)
-      .ease(d3.easeBounceOut)
-      .attr('r', 6);
+          .duration(150)
+          .attr('r', 5)
+          .style('stroke-width', 2);
+      });
 
     // Add labels for rupture data points
     g.selectAll('.sumchart-rupture-label')
@@ -294,6 +295,8 @@
       .attr('x', d => xScale(d.date))
       .attr('y', d => yScale(d.rupture) - 10)
       .attr('text-anchor', 'middle')
+      .style('fill', 'var(--grisfonce)')
+      .style('font-weight', '600')
       .text(d => d.rupture);
 
     // Add labels for tension data points
@@ -306,6 +309,8 @@
       .attr('x', d => xScale(d.date))
       .attr('y', d => yScale(d.tension) - 10)
       .attr('text-anchor', 'middle')
+      .style('fill', 'var(--grisfonce)')
+      .style('font-weight', '600')
       .text(d => d.tension);
 
     // Calculate current month data
